@@ -7,42 +7,82 @@ function usage() {
         echo "   Parameters:"
         echo
         echo "        -h: print this help doc"
-        echo
-        echo "        -b: run backup script"
-        echo
-        echo "        -d: check disk space"
-        echo
-        echo "        -r: remove old backups"
-        echo
-        echo "        -g: clear log"
-        echo
+        echo 
         echo "   Examples:"
         echo 
-        echo "        To view this help message:"
-        echo "                rdsbu -h"
-        echo 
-        echo "        To run backup process:"
-        echo "                rdsbu -b"
         echo
 }
 
 function hostthis() {
-	#directory = $(pwd)
+        if [[ $# == "0" ]]; then
+                writehost
+        else
+                switchboard $@
+        fi
+}
 
-	echo "Local domain name (ex. 'example.local')"
+function switchboard() {
+        while getopts ":ho" optname
+        do
+                case "$optname" in
+                        "o")
+                                openconf
+                                exit
+                                ;;
+                        "h")
+                                usage
+                                exit
+                                ;;
+                        "?")
+                                echo "Unknown option $OPTARG"
+                                ;;
+                        ":")
+                                case "$OPTARG" in
+                                        "f")
+                                                echo "Argument $OPTARG requires a filename"
+                                                exit
+                                                ;;
+                                        "t")
+                                                echo "Argument $OPTARG requires a tag name"
+                                                exit
+                                                ;;
+                                        *)
+                                                echo "Argument $OPTARG requires a value"
+                                                ;;
+                                esac
+                                ;;
+                        *)
+                                # Should not occur
+                                echo "Nothing to do"
+                                ;;
+                esac
+                # echo "OPTIND is now $OPTIND"
+        done
+}
+
+function writehost() {
+	directory=$(pwd)
+
+	name="example.local"
+
+	echo "Enter local domain name (ex. '$name'):"
 	read name
 
-	#echo "<VirtualHost *:80>" >> /etc/httpd/conf/httpd.conf
-	#echo "DocumentRoot \"$directory\"" >> /etc/httpd/conf/httpd.conf
-	#echo "ServerName $name" >> /etc/httpd/conf/httpd.conf
-	#echo "ServerAlias *.$name" >> /etc/httpd/conf/httpd.conf
-	#echo "</VirtualHost>" >> /etc/httpd/conf/httpd.conf
+	echo "<VirtualHost *:80>" >> /etc/httpd/conf/httpd.conf
+	echo "DocumentRoot \"$directory\"" >> /etc/httpd/conf/httpd.conf
+	echo "ServerName $name" >> /etc/httpd/conf/httpd.conf
+	echo "ServerAlias *.$name" >> /etc/httpd/conf/httpd.conf
+	echo "</VirtualHost>" >> /etc/httpd/conf/httpd.conf
 
-	echo "<VirtualHost *:80>"
-	echo "DocumentRoot \"$directory\""
-	echo "ServerName $name"
-	echo "ServerAlias *.$name"
-	echo "</VirtualHost>"
+	# echo "<VirtualHost *:80>"
+	# echo "DocumentRoot \"$directory\""
+	# echo "ServerName $name"
+	# echo "ServerAlias *.$name"
+	# echo "</VirtualHost>"
+}
+
+function openconf() {
+        sudo nano /etc/httpd/conf/httpd.conf
 }
 
 hostthis $@
