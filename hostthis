@@ -1,0 +1,48 @@
+#!/bin/bash
+
+function usage() {
+        echo
+        echo "Host This"
+        echo
+        echo "   Parameters:"
+        echo
+        echo "        -h: print this help doc"
+        echo
+        echo "        -b: run backup script"
+        echo
+        echo "        -d: check disk space"
+        echo
+        echo "        -r: remove old backups"
+        echo
+        echo "        -g: clear log"
+        echo
+        echo "   Examples:"
+        echo 
+        echo "        To view this help message:"
+        echo "                rdsbu -h"
+        echo 
+        echo "        To run backup process:"
+        echo "                rdsbu -b"
+        echo
+}
+
+function hostthis() {
+	#directory = $(pwd)
+
+	echo "Local domain name (ex. 'example.local')"
+	read name
+
+	#echo "<VirtualHost *:80>" >> /etc/httpd/conf/httpd.conf
+	#echo "DocumentRoot \"$directory\"" >> /etc/httpd/conf/httpd.conf
+	#echo "ServerName $name" >> /etc/httpd/conf/httpd.conf
+	#echo "ServerAlias *.$name" >> /etc/httpd/conf/httpd.conf
+	#echo "</VirtualHost>" >> /etc/httpd/conf/httpd.conf
+
+	echo "<VirtualHost *:80>"
+	echo "DocumentRoot \"$directory\""
+	echo "ServerName $name"
+	echo "ServerAlias *.$name"
+	echo "</VirtualHost>"
+}
+
+hostthis $@
