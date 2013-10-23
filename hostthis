@@ -60,28 +60,27 @@ function switchboard() {
         done
 }
 
-function writehost() {
+function writehost() { # default option
 	directory=$(pwd)
 
 	name="example.local"
 
 	echo "Enter local domain name (ex. '$name'):"
 	read name
-
-	echo "<VirtualHost *:80>" >> /etc/httpd/conf/httpd.conf
-	echo "DocumentRoot \"$directory\"" >> /etc/httpd/conf/httpd.conf
-	echo "ServerName $name" >> /etc/httpd/conf/httpd.conf
-	echo "ServerAlias *.$name" >> /etc/httpd/conf/httpd.conf
-	echo "</VirtualHost>" >> /etc/httpd/conf/httpd.conf
-
-	# echo "<VirtualHost *:80>"
-	# echo "DocumentRoot \"$directory\""
-	# echo "ServerName $name"
-	# echo "ServerAlias *.$name"
-	# echo "</VirtualHost>"
+        if [ -z "$name" ]; then 
+                echo "nothing to do"
+                echo
+        else
+                echo >> /etc/httpd/conf/httpd.conf
+                echo "<VirtualHost *:80>" >> /etc/httpd/conf/httpd.conf
+                echo "DocumentRoot \"$directory\"" >> /etc/httpd/conf/httpd.conf
+                echo "ServerName $name" >> /etc/httpd/conf/httpd.conf
+                echo "ServerAlias *.$name" >> /etc/httpd/conf/httpd.conf
+                echo "</VirtualHost>" >> /etc/httpd/conf/httpd.conf
+        fi
 }
 
-function openconf() {
+function openconf() { # option -o
         sudo nano /etc/httpd/conf/httpd.conf
 }
 
